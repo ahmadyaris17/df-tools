@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DATA FINDER TOOLS</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1>DATA FINDER TOOLS</h1>
+    <form id="fileUploadForm">
+        <label for="file1" class="custom-upload-button">Upload tm_barang.json </label>
+        <input type="file" id="file1" accept=".json" required>
+        <label for="file2" class="custom-upload-button">Upload tt_barang_saldo.json</label>
+        <input type="file" id="file2" accept=".json" required>
+        <button type="submit">Proses</button>
+    </form>
+    <div id="result"></div>
+    <script>
+        // function cariNilaiTidakAda(file1, file2) {
+        //     // Mengambil semua nilai kode_barcode dari File 2
+        //     const kodeBarcodeFile2 = file2.map(obj => obj.kode_barcode);
+        //     console.log(kodeBarcodeFile2);
+            
+        //     // Mencari objek dalam File 1 yang tidak ada di File 2
+        //     const nilaiTidakAda = file1.filter(obj => !kodeBarcodeFile2.includes(obj.kode_barcode));
+
+        //     return nilaiTidakAda;
+        // }
+
+        // CARI DUPLIKAT & file yang ngga ada
+        function cariBarcodeDuplikatDanTidakAda(file1, file2) {
+            const barcodeCounts = {};
+            const duplikatBarcodeFile2 = [];
+            const barcodeTidakAdaFile2 = [];
+
+            for (const obj of file2) {
+                if (obj.kode_barcode in barcodeCounts) {
+                    barcodeCounts[obj.kode_barcode]++;
+                    if (barcodeCounts[obj.kode_barcode] === 2) {
+                        duplikatBarcodeFile2.push(obj.kode_barcode);
+                    }
+                } else {
+                    barcodeCounts[obj.kode_barcode] = 1;
+                }
+            }
+
+            for (const obj of file1) {
+                if (!barcodeCounts[obj.kode_barcode]) {
+                    barcodeTidakAdaFile2.push(obj.kode_barcode);
+                }
+            }
+
+            return {
+                duplikatBarcodeFile2: duplikatBarcodeFile2,
+                barcodeTidakAdaFile2: barcodeTidakAdaFile2,
+            };
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileUploadForm = document.getElementById('fileUploadForm');
+            const file1Input = document.getElementById('file1');
+            const file2Input = document.getElementById('file2');
+            const resultDiv = document.getElementById('result');
+
+            fileUploadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const file1 = file1Input.files[0];
+                const file2 = file2Input.files[0];
+
+                if (file1 && file2) {
+                    const reader1 = new FileReader();
+                    const reader2 = new FileReader();
+
+                    reader1.onload = function(event) {
+                        const file1Data = JSON.parse(event.target.result);
+
+                        reader2.onload = function(event) {
+                            const file2Data = JSON.parse(event.target.result);
+
+                            // Jalankan fungsi cariBarcodeDuplikatDanTidakAda
+                            const hasil = cariBarcodeDuplikatDanTidakAda(file1Data, file2Data);
+                            resultDiv.innerHTML = `
+                                <p>Duplikat Barcode di File 2: ${JSON.stringify(hasil.duplikatBarcodeFile2)}</p>
+                                <p>Barcode yang Tidak Ada di File 2: ${JSON.stringify(hasil.barcodeTidakAdaFile2)}</p>
+                            `;
+                        };
+
+                        reader2.readAsText(file2);
+                    };
+
+                    reader1.readAsText(file1);
+                } else {
+                    resultDiv.textContent = 'Harap unggah kedua file.';
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileUploadForm = document.getElementById('fileUploadForm');
+            const file1Input = document.getElementById('file1');
+            const file2Input = document.getElementById('file2');
+            const resultDiv = document.getElementById('result');
+
+             // Tambahkan notifikasi saat file 1 berhasil dipilih
+             file1Input.addEventListener('change', function() {
+                if (file1Input.files.length > 0) {
+                    alert('File 1 berhasil dipilih.');
+                }
+            });
+
+            // Tambahkan notifikasi saat file 2 berhasil dipilih
+            file2Input.addEventListener('change', function() {
+                if (file2Input.files.length > 0) {
+                    alert('File 2 berhasil dipilih.');
+                }
+            });
+
+
+            fileUploadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const file1 = file1Input.files[0];
+                const file2 = file2Input.files[0];
+
+                if (file1 && file2) {
+                    const reader1 = new FileReader();
+                    const reader2 = new FileReader();
+
+                    reader1.onload = function(event) {
+                        const file1Data = JSON.parse(event.target.result);
+
+                        reader2.onload = function(event) {
+                            const file2Data = JSON.parse(event.target.result);
+
+                            // Jalankan fungsi cariNilaiTidakAda
+                            const hasil = cariNilaiTidakAda(file1Data, file2Data);
+                            resultDiv.textContent = JSON.stringify(hasil, null, 2);
+                        };
+
+                        // Tampilkan notifikasi di halaman web
+const notifikasi = document.createElement('p');
+notifikasi.textContent = 'File berhasil diunggah dan diproses.';
+notifikasi.classList.add('success-notification');
+document.body.appendChild(notifikasi);
+
+                        reader2.readAsText(file2);
+                    };
+
+                    reader1.readAsText(file1);
+                } else {
+                    resultDiv.textContent = 'Harap unggah kedua file.';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
