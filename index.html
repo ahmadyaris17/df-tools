@@ -103,20 +103,53 @@
             const file2Input = document.getElementById('file2');
             const resultDiv = document.getElementById('result');
 
-             // Tambahkan notifikasi saat file 1 berhasil dipilih
-             file1Input.addEventListener('change', function() {
-                if (file1Input.files.length > 0) {
-                    alert('File 1 berhasil dipilih.');
-                }
-            });
+// Tambahkan notifikasi saat file 1 berhasil dipilih
+file1Input.addEventListener('change', function() {
+    if (file1Input.files.length > 0) {
+        const notifikasi = document.createElement('p');
+        notifikasi.textContent = 'File 1 berhasil diunggah.';
+        notifikasi.classList.add('file-upload-notification');
+        document.body.appendChild(notifikasi);
 
-            // Tambahkan notifikasi saat file 2 berhasil dipilih
-            file2Input.addEventListener('change', function() {
-                if (file2Input.files.length > 0) {
-                    alert('File 2 berhasil dipilih.');
-                }
-            });
+        // Hilangkan notifikasi setelah 3 detik
+        setTimeout(function() {
+            notifikasi.style.animation = 'slide-out 0.5s ease-in-out';
+            notifikasi.style.opacity = '0';
+            setTimeout(function() {
+                notifikasi.remove();
+            }, 7000);
+        }, 7000);
+    }
+});
 
+// Tambahkan notifikasi saat file 2 berhasil dipilih
+file2Input.addEventListener('change', function() {
+    if (file2Input.files.length > 0) {
+        const notifikasi = document.querySelector('.file-upload-notification');
+        if (notifikasi) {
+            notifikasi.style.animation = 'slide-out 0.5s ease-in-out';
+            notifikasi.style.opacity = '0';
+            setTimeout(function() {
+                notifikasi.remove();
+            }, 7000);
+        }
+
+        const notifikasiFile2 = document.createElement('p');
+        notifikasiFile2.textContent = 'File 2 berhasil diunggah.';
+        notifikasiFile2.classList.add('file-upload-notification');
+        document.body.appendChild(notifikasiFile2);
+
+        // Hilangkan notifikasi file 2 setelah 3 detik
+        setTimeout(function() {
+            notifikasiFile2.style.animation = 'slide-out 0.5s ease-in-out';
+            notifikasiFile2.style.opacity = '0';
+            setTimeout(function() {
+                notifikasiFile2.remove();
+            }, 7000);
+        }, 7000);
+    }
+});
+// akhir notif
 
             fileUploadForm.addEventListener('submit', function(e) {
                 e.preventDefault();
