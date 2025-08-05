@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DATA FINDER TOOLS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>DATA FINDER TOOLS</h1>
+
+    <form id="fileUploadForm">
+        <label for="file1" class="custom-upload-button" id="labelFile1">Upload File yang Lebih Banyak</label>
+        <input type="file" id="file1" accept=".json" required>
+
+        <label for="file2" class="custom-upload-button" id="labelFile2">Upload File yang Lebih Sedikit</label>
+        <input type="file" id="file2" accept=".json" required>
+
+        <button type="submit">Proses</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
