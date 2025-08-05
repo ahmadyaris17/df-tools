@@ -1,0 +1,170 @@
+/* styles.css */
+
+/* --- Gaya Dasar --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f8;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+    display: flex; /* Menggunakan Flexbox untuk tata letak terpusat */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+h1 {
+    color: #2c3e50;
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+
+/* --- Container Formulir --- */
+form {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex; /* Menggunakan Flexbox */
+    flex-direction: column;
+    gap: 15px; /* Memberi jarak antar elemen */
+    max-width: 400px;
+    width: 100%;
+}
+
+/* --- Input File & Label (Tombol Unggah) --- */
+label.custom-upload-button {
+    display: block;
+    background-color: #3498db;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+label.custom-upload-button:hover {
+    background-color: #2980b9;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+/* --- Tombol Submit --- */
+button[type="submit"] {
+    background-color: #2ecc71;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #27ae60;
+}
+
+/* --- Area Hasil (Result) --- */
+#result {
+    margin-top: 30px;
+    text-align: left;
+    max-width: 700px;
+    width: 100%; /* Agar responsif */
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Gaya untuk elemen di dalam div #result */
+#result h2, #result h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+#result hr {
+    border: none;
+    height: 1px;
+    background-color: #eee;
+    margin: 15px 0;
+}
+
+.result-list {
+    list-style-type: none; /* Menghilangkan bullet default */
+    padding-left: 0;
+}
+
+.result-list li {
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    background-color: #ecf0f1;
+    border-left: 4px solid #3498db; /* Garis warna di sisi kiri */
+    border-radius: 4px;
+}
+
+/* --- Notifikasi --- */
+.file-upload-notification {
+    position: fixed;
+    top: 20px; /* Posisi di atas */
+    left: 50%;
+    transform: translateX(-50%); /* Pusatkan secara horizontal */
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    z-index: 1000;
+    right: auto; /* Pastikan tidak ada konflik dengan 'right' sebelumnya */
+    bottom: auto; /* Pastikan tidak ada konflik dengan 'bottom' sebelumnya */
+}
+
+.file-upload-notification.info {
+    background-color: #3498db;
+}
+
+.file-upload-notification.success {
+    background-color: #28a745;
+}
+
+.file-upload-notification.error {
+    background-color: #dc3545;
+}
+
+/* --- Animasi Notifikasi --- */
+@keyframes slide-in {
+    from { transform: translateX(-50%) translateY(-100%); opacity: 0; } /* Mulai dari atas */
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+@keyframes slide-out {
+    from { transform: translateX(-50%) translateY(0); opacity: 1; }
+    to { transform: translateX(-50%) translateY(-100%); opacity: 0; } /* Keluar ke atas */
+}
+
+/* --- Responsif --- */
+@media (max-width: 500px) {
+    body {
+        padding: 10px;
+    }
+    form {
+        padding: 20px;
+    }
+    h1 {
+        font-size: 24px;
+    }
+    #result {
+        font-size: 14px;
+        padding: 15px;
+    }
+    .file-upload-notification {
+        width: 80%;
+        left: 50%;
+        transform: translateX(-50%);
+        right: auto;
+    }
+}
