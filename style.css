@@ -146,6 +146,32 @@ button[type="submit"]:hover {
     to { transform: translateX(-50%) translateY(-100%); opacity: 0; } /* Keluar ke atas */
 }
 
+/* --- Gaya untuk Tombol Salin (Copy) --- */
+.copy-button {
+    margin-top: 8px;
+    background-color: #10ace0;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.25s ease;
+    display: inline-block;
+}
+
+.copy-button:hover {
+    background-color: #13aaeb;
+}
+
+.copy-button:active {
+    background-color: #0c99d6;
+}
+
+.copy-button + h3 { /* jarak sebelum heading berikutnya jika ada */
+    margin-top: 24px;
+}
+
 /* --- Responsif --- */
 @media (max-width: 500px) {
     body {

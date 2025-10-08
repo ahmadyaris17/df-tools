@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const labelFile1 = document.getElementById('labelFile1'); // Dapatkan elemen label
     const labelFile2 = document.getElementById('labelFile2'); // Dapatkan elemen label
 
+    let hasilAnalisisTerakhir = null; // Menyimpan hasil analisis untuk fitur copy
+
     // Fungsi untuk menampilkan notifikasi yang lebih baik
     function tampilkanNotifikasi(teks, tipe = 'info') {
         // Hapus notifikasi lama jika ada
@@ -46,6 +48,36 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Fungsi util untuk membuat tombol copy
+    function buatTombolCopy(teksLabel, tipeData) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'copy-button';
+        btn.textContent = teksLabel;
+        btn.addEventListener('click', () => {
+            if (!hasilAnalisisTerakhir) {
+                tampilkanNotifikasi('Belum ada hasil untuk dicopy.', 'error');
+                return;
+            }
+            let targetArray = [];
+            if (tipeData === 'duplikat') targetArray = hasilAnalisisTerakhir.duplikatBarcodeFile2;
+            if (tipeData === 'tidakAda') targetArray = hasilAnalisisTerakhir.barcodeTidakAdaFile2;
+
+            if (!Array.isArray(targetArray) || targetArray.length === 0) {
+                tampilkanNotifikasi('Data kosong, tidak bisa dicopy.', 'error');
+                return;
+            }
+
+            const objOutput = { "kode_barcode": { "$in": targetArray } };
+            const textOutput = JSON.stringify(objOutput, null, 2);
+
+            navigator.clipboard.writeText(textOutput)
+                .then(() => tampilkanNotifikasi('Berhasil dicopy ke clipboard.', 'success'))
+                .catch(() => tampilkanNotifikasi('Gagal menyalin ke clipboard.', 'error'));
+        });
+        return btn;
+    }
+
     fileUploadForm.addEventListener('submit', function (e) {
         e.preventDefault();
         const file1 = file1Input.files[0];
@@ -70,27 +102,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         const file2Data = JSON.parse(event2.target.result);
 
                         const hasil = cariBarcodeDuplikatDanTidakAda(file1Data, file2Data);
+                        hasilAnalisisTerakhir = hasil; // Simpan hasil analisis terakhir untuk fitur copy
                         
                         // Menampilkan hasil yang lebih mudah dibaca
-                        resultDiv.innerHTML = `
-                            <h2>Hasil Analisis</h2>
-                            
-                            <hr>
-                            
-                            <h3>Daftar Barcode Duplikat (${hasil.duplikatBarcodeFile2.length} ditemukan)</h3>
-                            <ul class="result-list">
-                                ${hasil.duplikatBarcodeFile2.length > 0 
-                                    ? hasil.duplikatBarcodeFile2.map(item => `<li>${item}</li>`).join('')
-                                    : '<li>Tidak ada barcode duplikat.</li>'}
-                            </ul>
-                            
-                            <h3>Daftar Barcode Tidak Ada di File 2 (${hasil.barcodeTidakAdaFile2.length} ditemukan)</h3>
-                            <ul class="result-list">
-                                ${hasil.barcodeTidakAdaFile2.length > 0
-                                    ? hasil.barcodeTidakAdaFile2.map(item => `<li>${item}</li>`).join('')
-                                    : '<li>Semua barcode dari File 1 ada di File 2.</li>'}
-                            </ul>
-                        `;
+                        renderHasil(hasil);
                         tampilkanNotifikasi("File berhasil diproses!", 'success');
                     } catch (error) {
                         resultDiv.textContent = 'Gagal memproses File 2. Pastikan format file JSON valid.';
@@ -138,5 +153,54 @@ document.addEventListener('DOMContentLoaded', function () {
             duplikatBarcodeFile2: [...barcodesDuplikat], 
             barcodeTidakAdaFile2 
         };
+    }
+
+    // Override bagian display hasil (replace innerHTML block) melalui delegasi setelah analisis
+    function renderHasil(hasil) {
+        resultDiv.innerHTML = '';
+        const h2 = document.createElement('h2');
+        h2.textContent = 'Hasil Analisis';
+        resultDiv.appendChild(h2);
+        resultDiv.appendChild(document.createElement('hr'));
+
+        // Section duplikat
+        const h3Dup = document.createElement('h3');
+        h3Dup.textContent = `Daftar Barcode Duplikat (${hasil.duplikatBarcodeFile2.length} ditemukan)`;
+        resultDiv.appendChild(h3Dup);
+        const ulDup = document.createElement('ul');
+        ulDup.className = 'result-list';
+        if (hasil.duplikatBarcodeFile2.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = 'Tidak ada barcode duplikat.';
+            ulDup.appendChild(li);
+        } else {
+            hasil.duplikatBarcodeFile2.forEach(b => {
+                const li = document.createElement('li');
+                li.textContent = b;
+                ulDup.appendChild(li);
+            });
+        }
+        resultDiv.appendChild(ulDup);
+        resultDiv.appendChild(buatTombolCopy('Copy Duplikat (JSON)', 'duplikat'));
+
+        // Section tidak ada
+        const h3Tidak = document.createElement('h3');
+        h3Tidak.textContent = `Daftar Barcode Tidak Ada di File 2 (${hasil.barcodeTidakAdaFile2.length} ditemukan)`;
+        resultDiv.appendChild(h3Tidak);
+        const ulTidak = document.createElement('ul');
+        ulTidak.className = 'result-list';
+        if (hasil.barcodeTidakAdaFile2.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = 'Semua barcode dari File 1 ada di File 2.';
+            ulTidak.appendChild(li);
+        } else {
+            hasil.barcodeTidakAdaFile2.forEach(b => {
+                const li = document.createElement('li');
+                li.textContent = b;
+                ulTidak.appendChild(li);
+            });
+        }
+        resultDiv.appendChild(ulTidak);
+        resultDiv.appendChild(buatTombolCopy('Copy Tidak Ada (JSON)', 'tidakAda'));
     }
 });
