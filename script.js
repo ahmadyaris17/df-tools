@@ -48,6 +48,24 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Event handler untuk tombol reset
+    const btnReset = document.getElementById('btnReset');
+    btnReset.addEventListener('click', () => {
+        // Reset form
+        fileUploadForm.reset();
+        
+        // Reset label ke teks awal
+        labelFile1.textContent = 'Upload File yang Lebih Banyak';
+        labelFile2.textContent = 'Upload File yang Lebih Sedikit';
+        
+        // Hapus hasil analisis
+        resultDiv.innerHTML = '';
+        hasilAnalisisTerakhir = null;
+        
+        // Tampilkan notifikasi
+        tampilkanNotifikasi("Form berhasil direset.", 'info');
+    });
+
     // Fungsi util untuk membuat tombol copy
     function buatTombolCopy(teksLabel, tipeData) {
         const btn = document.createElement('button');
@@ -202,5 +220,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         resultDiv.appendChild(ulTidak);
         resultDiv.appendChild(buatTombolCopy('Copy Tidak Ada (JSON)', 'tidakAda'));
+        
+        // Auto-scroll ke hasil dengan animasi smooth
+        setTimeout(() => {
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
     }
 });

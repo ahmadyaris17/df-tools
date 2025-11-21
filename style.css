@@ -53,20 +53,84 @@ input[type="file"] {
     display: none;
 }
 
+/* --- Container Tombol Aksi --- */
+.button-group {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
 /* --- Tombol Submit --- */
-button[type="submit"] {
-    background-color: #2ecc71;
+.btn-process {
+    flex: 1;
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
     color: white;
     padding: 12px 25px;
     border: none;
     border-radius: 8px;
     font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(46, 204, 113, 0.3);
 }
 
-button[type="submit"]:hover {
-    background-color: #27ae60;
+.btn-process:hover {
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(46, 204, 113, 0.4);
+}
+
+.btn-process:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(46, 204, 113, 0.3);
+}
+
+/* --- Tombol Reset --- */
+.btn-reset {
+    flex: 1;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(231, 76, 60, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-reset:hover {
+    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(231, 76, 60, 0.4);
+}
+
+.btn-reset:active {
+    transform: translateY(0) rotate(180deg);
+    box-shadow: 0 2px 4px rgba(231, 76, 60, 0.3);
+    transition: transform 0.5s ease;
+}
+
+.btn-reset::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-reset:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 /* --- Area Hasil (Result) --- */
@@ -192,5 +256,11 @@ button[type="submit"]:hover {
         left: 50%;
         transform: translateX(-50%);
         right: auto;
+    }
+    .button-group {
+        flex-direction: column;
+    }
+    .btn-process, .btn-reset {
+        width: 100%;
     }
 }
